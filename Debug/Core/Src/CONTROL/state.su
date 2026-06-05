@@ -1,0 +1,13 @@
+../Core/Src/CONTROL/state.c:16:6:FC_StandBy_State	8	static
+../Core/Src/CONTROL/state.c:27:6:FC_StartUp_FanSpoolUp_State	8	static
+../Core/Src/CONTROL/state.c:45:6:FC_StartUp_StartUpPurge_State	8	static
+../Core/Src/CONTROL/state.c:63:6:FC_WarmUp	8	static
+../Core/Src/CONTROL/state.c:81:6:FC_StartUp_End_State	8	static
+../Core/Src/CONTROL/state.c:95:6:FC_Run_State	8	static
+../Core/Src/CONTROL/state.c:110:6:FC_Shutdown_State	8	static
+../Core/Src/CONTROL/state.c:128:6:FC_Alarm_State	8	static
+../Core/Src/CONTROL/state.c:140:5:round_p	32	static
+../Core/Src/CONTROL/state.c:153:5:StartECU	8	static
+../Core/Src/CONTROL/state.c:160:6:ForceSupply	8	static
+../Core/Src/CONTROL/state.c:169:6:ForcePurge	8	static
+../Core/Src/CONTROL/state.c:178:6:Air_Starve	8	static
