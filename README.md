@@ -24,3 +24,18 @@
 | Saída         | FORCE_SUPPLY | PA9  | CN10-2   |
 | Saída         | FORCE_PURGE  | PA10 | CN10-4   |
 | Saída   | SUPPLY       | PC11 | CN7-2    |
+
+| Timer  | Tipo                      | Uso típico                                   |
+| ------ | ------------------------- | -------------------------------------------- |
+| TIM1   | Advanced Control          | PWM avançado, dead-time, controle de motores |
+| TIM2   | General Purpose (32 bits) | Base de tempo, contadores longos             |
+| TIM3   | General Purpose           | PWM, interrupções periódicas                 |
+| TIM4   | General Purpose           | PWM, interrupções periódicas                 |
+| TIM5   | General Purpose (32 bits) | Base de tempo longa                          |
+| TIM6   | Basic Timer               | Apenas geração de interrupção/DAC            |
+| TIM7   | Basic Timer               | Apenas geração de interrupção/DAC            |
+| TIM15  | General Purpose           | PWM e interrupções                           |
+| TIM16  | General Purpose           | PWM e interrupções                           |
+| TIM17  | General Purpose           | PWM e interrupções                           |
+| LPTIM1 | Low Power Timer           | Temporizações em baixo consumo               |
+| LPTIM2 | Low Power Timer           | Temporizações em baixo consumo               |
