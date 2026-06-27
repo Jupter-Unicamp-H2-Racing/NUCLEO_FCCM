@@ -1,7 +1,7 @@
 Core/Src/CONTROL/transmit.o: ../Core/Src/CONTROL/transmit.c \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/transmit.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
- ../Core/Inc/main.h ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/transmit.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h ../Core/Inc/main.h \
+ ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h \
  ../Core/Inc/stm32h5xx_hal_conf.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_rcc.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_def.h \
@@ -34,13 +34,13 @@ Core/Src/CONTROL/transmit.o: ../Core/Src/CONTROL/transmit.c \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/transmit.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
+ /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/transmit.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h:
 ../Core/Inc/stm32h5xx_hal_conf.h:
@@ -75,8 +75,8 @@ Core/Src/CONTROL/transmit.o: ../Core/Src/CONTROL/transmit.c \
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h:

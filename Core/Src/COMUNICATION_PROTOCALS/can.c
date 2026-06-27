@@ -8,7 +8,7 @@ não está configurado para isso, terremos que pedir o
 ID e o slice do DATA para pegar a velocidade
 */
 
-extern FDCAN_HandleTypeDef hfdcan1;
+extern FDCAN_HandleTypeDef hfdcan2;
 extern FDCAN_TxHeaderTypeDef CHECK;
 extern FDCAN_TxHeaderTypeDef ERROR_CAN;
 extern FDCAN_FilterTypeDef sFilterConfig;
@@ -21,7 +21,7 @@ void config(){
   sFilterConfig.FilterID1 = 0x0000;
   sFilterConfig.FilterID2 = 0x0000;
 
-  HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig);
+  HAL_FDCAN_ConfigFilter(&hfdcan2, &sFilterConfig);
 }
 
 /*
@@ -77,5 +77,5 @@ void Slice_DATA(void){
 
 void SEND_CAN_Message(void) {
   Slice_DATA();
-  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &CHECK, DATA);
+  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &CHECK, DATA);
 }

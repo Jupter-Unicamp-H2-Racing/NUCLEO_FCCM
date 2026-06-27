@@ -18,7 +18,7 @@ DMA_HandleTypeDef handle_GPDMA2_Channel0;
 uint16_t ADC_VC[40] = {0};
 uint16_t ADC_TP[40] = {0};
 // --- Barramento CAN ---
-FDCAN_HandleTypeDef hfdcan1;
+FDCAN_HandleTypeDef hfdcan2;
 FDCAN_TxHeaderTypeDef CHECK;
 FDCAN_TxHeaderTypeDef ERROR_CAN;
 FDCAN_FilterTypeDef sFilterConfig;
@@ -69,7 +69,7 @@ static void MX_GPDMA1_Init(void);
 static void MX_GPDMA2_Init(void);
 static void MX_ICACHE_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_FDCAN1_Init(void);
+static void MX_FDCAN2_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
@@ -88,7 +88,7 @@ MX_GPDMA1_Init();
 MX_GPDMA2_Init();
 MX_ICACHE_Init();
 MX_ADC1_Init();
-MX_FDCAN1_Init();
+MX_FDCAN2_Init();
 MX_ADC2_Init();
 MX_USART2_UART_Init();
 MX_TIM1_Init();
@@ -100,7 +100,7 @@ HAL_ADC_Start_DMA(&hadc2, (uint32_t*)&ADC_TP, 40);
 declare_can_CHECK();
 declare_can_ERROR();
 config();
-HAL_FDCAN_Start(&hfdcan1);
+HAL_FDCAN_Start(&hfdcan2);
 println("inicializado com sucesso");
 while (1)
 {
@@ -150,7 +150,65 @@ while (1)
 }
 }
 
+void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
+{
+    if (hadc->Instance == ADC1)
+    {
+        float voltage_acc = 0;
+        float current_acc = 0;
 
+        for (int i = 0; i < 20; i++) {
+            voltage_acc += ADC_VC[2*i];
+            current_acc += ADC_VC[2*i + 1];
+        }
+
+        //Voltage = voltage_acc / 20.0f;
+        //Current = (int)(current_acc / 20.0f);
+        voltage_acc /= 20.0f;
+        voltage_acc /= 4095.0f;
+        voltage_acc *= 100.0f;
+        current_acc /= 20.0f;
+        current_acc /= 4095.0f;
+        current_acc *= 100.0f;
+        Voltage = voltage_acc; //teste com valor constante
+        Current = current_acc;
+    }
+
+    if (hadc->Instance == ADC2)
+    {
+        float pressure_acc = 0;
+        float temp_acc = 0;
+
+        for (int i = 0; i < 20; i++) {
+            pressure_acc += ADC_TP[2*i];
+            temp_acc += ADC_TP[2*i + 1];
+        }
+
+        pressure_acc /= 20.0f;
+        pressure_acc /= 4095.0f;
+        Pressure = pressure_acc;
+        //Temp = (int)(temp_acc / 20.0f);
+
+        temp_acc /= 20.0f;
+        temp_acc /= 4095.0f;
+        temp_acc *= 100.0f;
+        Temp = temp_acc;
+    }
+}
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
+{
+    if (!Start && FcActualState != FC_ALARM) {
+	FcActualState = FC_STARTUP_FANSPOOLUP;
+	println("ligou");
+	Start = 1;
+	Entry = 1;
+    }
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -165,20 +223,19 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_CSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV2;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.CSIState = RCC_CSI_ON;
-  RCC_OscInitStruct.CSICalibrationValue = RCC_CSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLL1_SOURCE_CSI;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 129;
-  RCC_OscInitStruct.PLL.PLLP = 2;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLL1_SOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 3;
+  RCC_OscInitStruct.PLL.PLLN = 60;
+  RCC_OscInitStruct.PLL.PLLP = 6;
   RCC_OscInitStruct.PLL.PLLQ = 6;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1_VCIRANGE_2;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1_VCIRANGE_3;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1_VCORANGE_WIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -344,45 +401,45 @@ static void MX_ADC2_Init(void)
 }
 
 /**
-  * @brief FDCAN1 Initialization Function
+  * @brief FDCAN2 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_FDCAN1_Init(void)
+static void MX_FDCAN2_Init(void)
 {
 
-  /* USER CODE BEGIN FDCAN1_Init 0 */
+  /* USER CODE BEGIN FDCAN2_Init 0 */
 
-  /* USER CODE END FDCAN1_Init 0 */
+  /* USER CODE END FDCAN2_Init 0 */
 
-  /* USER CODE BEGIN FDCAN1_Init 1 */
+  /* USER CODE BEGIN FDCAN2_Init 1 */
 
-  /* USER CODE END FDCAN1_Init 1 */
-  hfdcan1.Instance = FDCAN1;
-  hfdcan1.Init.ClockDivider = FDCAN_CLOCK_DIV1;
-  hfdcan1.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
-  hfdcan1.Init.Mode = FDCAN_MODE_NORMAL;
-  hfdcan1.Init.AutoRetransmission = DISABLE;
-  hfdcan1.Init.TransmitPause = DISABLE;
-  hfdcan1.Init.ProtocolException = DISABLE;
-  hfdcan1.Init.NominalPrescaler = 4;
-  hfdcan1.Init.NominalSyncJumpWidth = 1;
-  hfdcan1.Init.NominalTimeSeg1 = 36;
-  hfdcan1.Init.NominalTimeSeg2 = 6;
-  hfdcan1.Init.DataPrescaler = 1;
-  hfdcan1.Init.DataSyncJumpWidth = 1;
-  hfdcan1.Init.DataTimeSeg1 = 1;
-  hfdcan1.Init.DataTimeSeg2 = 1;
-  hfdcan1.Init.StdFiltersNbr = 0;
-  hfdcan1.Init.ExtFiltersNbr = 0;
-  hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
-  if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
+  /* USER CODE END FDCAN2_Init 1 */
+  hfdcan2.Instance = FDCAN2;
+  hfdcan2.Init.ClockDivider = FDCAN_CLOCK_DIV1;
+  hfdcan2.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
+  hfdcan2.Init.Mode = FDCAN_MODE_NORMAL;
+  hfdcan2.Init.AutoRetransmission = DISABLE;
+  hfdcan2.Init.TransmitPause = DISABLE;
+  hfdcan2.Init.ProtocolException = DISABLE;
+  hfdcan2.Init.NominalPrescaler = 8;
+  hfdcan2.Init.NominalSyncJumpWidth = 1;
+  hfdcan2.Init.NominalTimeSeg1 = 15;
+  hfdcan2.Init.NominalTimeSeg2 = 4;
+  hfdcan2.Init.DataPrescaler = 1;
+  hfdcan2.Init.DataSyncJumpWidth = 1;
+  hfdcan2.Init.DataTimeSeg1 = 1;
+  hfdcan2.Init.DataTimeSeg2 = 1;
+  hfdcan2.Init.StdFiltersNbr = 0;
+  hfdcan2.Init.ExtFiltersNbr = 0;
+  hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
+  if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN FDCAN1_Init 2 */
+  /* USER CODE BEGIN FDCAN2_Init 2 */
 
-  /* USER CODE END FDCAN1_Init 2 */
+  /* USER CODE END FDCAN2_Init 2 */
 
 }
 
@@ -494,7 +551,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 319;
+  htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 100;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -607,6 +664,7 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -689,62 +747,6 @@ void MPU_Config(void)
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 
 }
-
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
-{
-    if (hadc->Instance == ADC1)
-    {
-        float voltage_acc = 0;
-        float current_acc = 0;
-
-        for (int i = 0; i < 20; i++) {
-            voltage_acc += ADC_VC[2*i];
-            current_acc += ADC_VC[2*i + 1];
-        }
-
-        //Voltage = voltage_acc / 20.0f;
-        //Current = (int)(current_acc / 20.0f);
-        voltage_acc /= 20.0f;
-        voltage_acc /= 4095.0f;
-        voltage_acc *= 100.0f;
-        current_acc /= 20.0f;
-        current_acc /= 4095.0f;
-        current_acc *= 100.0f;
-        Voltage = voltage_acc; //teste com valor constante
-        Current = current_acc;
-    }
-
-    if (hadc->Instance == ADC2)
-    {
-        float pressure_acc = 0;
-        float temp_acc = 0;
-
-        for (int i = 0; i < 20; i++) {
-            pressure_acc += ADC_TP[2*i];
-            temp_acc += ADC_TP[2*i + 1];
-        }
-
-        pressure_acc /= 20.0f;
-        pressure_acc /= 4095.0f;
-        Pressure = pressure_acc;
-        //Temp = (int)(temp_acc / 20.0f);
-
-        temp_acc /= 20.0f;
-        temp_acc /= 4095.0f;
-        temp_acc *= 100.0f;
-        Temp = temp_acc;
-    }
-}
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
-{
-    if (!Start && FcActualState != FC_ALARM) {
-	FcActualState = FC_STARTUP_FANSPOOLUP;
-	println("ligou");
-	Start = 1;
-	Entry = 1;
-    }
-}
-
 
 /**
   * @brief  This function is executed in case of error occurrence.

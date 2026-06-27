@@ -63,8 +63,8 @@ all: main-build
 main-build: NUCLEO_FCCM.elf secondary-outputs
 
 # Tool invocations
-NUCLEO_FCCM.elf NUCLEO_FCCM.map: $(OBJS) $(USER_OBJS) /home/yugo/Downloads/NUCLEO_FCCM/STM32H533RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "NUCLEO_FCCM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"/home/yugo/Downloads/NUCLEO_FCCM/STM32H533RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO_FCCM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+NUCLEO_FCCM.elf NUCLEO_FCCM.map: $(OBJS) $(USER_OBJS) /home/yugo/NUCLEO_FCCM/STM32H533RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "NUCLEO_FCCM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"/home/yugo/NUCLEO_FCCM/STM32H533RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO_FCCM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

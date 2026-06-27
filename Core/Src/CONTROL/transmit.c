@@ -8,7 +8,7 @@
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
-extern FDCAN_HandleTypeDef hfdcan1;
+extern FDCAN_HandleTypeDef hfdcan2;
 extern FDCAN_TxHeaderTypeDef ERROR_CAN;
 
 Alarm_Status Alarm = NO_ALARM;
@@ -73,7 +73,7 @@ void Check_Alarms(void)
             	Entry = 1;
                 FcActualState = FC_ALARM;
                 ERRO_C[0] = 1;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &ERROR_CAN, ERRO_C);
+                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -86,8 +86,8 @@ void Check_Alarms(void)
             if (Time - fault_start_time >= ALARM_TIME_PRESSURE) {
             	Entry = 1;
                 FcActualState = FC_ALARM;
-                ERRO_C[0] = 20;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &ERROR_CAN, ERRO_C);
+                ERRO_C[3] = 1;
+                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -98,8 +98,8 @@ void Check_Alarms(void)
             if (Time - fault_start_time >= ALARM_TIME_CURRENT) {
             	Entry = 1;
                 FcActualState = FC_ALARM;
-                ERRO_C[0] = 40;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &ERROR_CAN, ERRO_C);
+                ERRO_C[1] = 1;
+                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -110,8 +110,8 @@ void Check_Alarms(void)
             if (Time - fault_start_time >= ALARM_TIME_VOLTAGE) {
             	Entry = 1;
                 FcActualState = FC_ALARM;
-                ERRO_C[0] = 80;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &ERROR_CAN, ERRO_C);
+                ERRO_C[2] = 1;
+                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 

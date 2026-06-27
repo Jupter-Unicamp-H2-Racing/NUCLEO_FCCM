@@ -1,7 +1,7 @@
 Core/Src/CMD/contactor.o: ../Core/Src/CMD/contactor.c \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CMD/contactor.h \
- /home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
- ../Core/Inc/main.h ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/contactor.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h ../Core/Inc/main.h \
+ ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h \
  ../Core/Inc/stm32h5xx_hal_conf.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_rcc.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_def.h \
@@ -34,8 +34,8 @@ Core/Src/CMD/contactor.o: ../Core/Src/CMD/contactor.c \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CMD/contactor.h:
-/home/yugo/Downloads/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CMD/contactor.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h:
 ../Core/Inc/stm32h5xx_hal_conf.h:

@@ -9,7 +9,7 @@
  * troocar para 0x04901000, assim que o código novo
  * chegar da FT
  */
-#define ID_ERROR 0x0AF510B2 //o valor aqui é uma simulação de erro
+#define ID_ERROR 0x04901000 //o valor aqui é uma simulação de erro
 
 /*
 o protocolo vai ser dividido em duas partes:
