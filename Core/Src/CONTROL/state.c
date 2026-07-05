@@ -8,6 +8,7 @@
 
 extern Fc_State FcActualState;
 extern int Entry;
+extern int Delay_Restart;
 
 // Variáveis para controle de delay interno dos estados
 int first_delay_auth = 1;
@@ -162,6 +163,7 @@ void FC_Shutdown_State(){
         if(Time - shutdown_start_time > SHUTDOWN_DURATION){
             FcActualState = FC_STANDBY;
             Entry=1;
+            Delay_Restart=1;
         }
     }
 }

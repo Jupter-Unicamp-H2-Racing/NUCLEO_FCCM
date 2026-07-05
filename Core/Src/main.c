@@ -1,5 +1,4 @@
 #include "main.h"
-#include "main.h"
 #include "context.h"
 #include "state.h"
 #include "uart.h"
@@ -77,6 +76,7 @@ int flag_20ms = 0;
 int flag_100ms = 0;
 int Delay_S = 0;
 int Delay_P = 0;
+int Delay_Restart = 1;
 
 UART_HandleTypeDef huart2;
 
@@ -239,7 +239,7 @@ int main(void)
     }
   void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
   {
-      if (GPIO_Pin == ECM_Pin)
+      if (GPIO_Pin == ECM_Pin && Delay_Restart)
       {
           if (!Start && FcActualState != FC_ALARM) {
               FcActualState = FC_STARTUP_FANSPOOLUP;
@@ -275,6 +275,7 @@ int main(void)
       if (StartECU() && Start && FcActualState != FC_ALARM) {
     	  FcActualState = FC_SHUTDOWN;
     	  Start = 0;
+        Delay_Restart = 0;
       }
     }
   }
