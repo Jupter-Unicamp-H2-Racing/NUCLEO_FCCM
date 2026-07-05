@@ -1,4 +1,4 @@
-#include "transmit.h"
+#include "alarms.h"
 #include "uart.h"
 #include "valve.h"
 #include "main.h"
@@ -10,31 +10,37 @@ extern ADC_HandleTypeDef hadc2;
 
 extern FDCAN_HandleTypeDef hfdcan2;
 extern FDCAN_TxHeaderTypeDef ERROR_CAN;
+extern FDCAN_TxHeaderTypeDef CHECK;
 
 Alarm_Status Alarm = NO_ALARM;
 static uint32_t fault_start_time = 0;
+float Current_To_Voltage = 0;
+uint32_t fault = 0;
+uint32_t last_reading = 0;
 extern float Pressure;
 extern float Voltage;
 extern int Temp;
 extern int Current;
 extern int Entry;
 extern uint32_t Time;
-int cont_print = 0;
 int Alarm_Entry = 1;
-int inteiro;
-int decimal;
 
-void H2_reaction_tracker(void)
-{
-
-    H2_reacted = H2_REACTION_PER_SEC_A * Current * PurgeLastCallTime;
-
-    if (H2_consumed + H2_reacted >= H2_TOTAL_MASS) {
-        H2_consumed = H2_TOTAL_MASS;
-    } else {
-        H2_consumed += H2_reacted;
-    }
+void CheckVoltageNominal() {
+        if (Current < 8){
+            Current_To_Voltage = (-0.01875*Current + 1) * 46;
+        }else{
+            Current_To_Voltage =  (-0.002*Current + 0.83) * 46;
+        }
+        fault = (Voltage < Current_To_Voltage - 10);
+        if ((Time - fault > 1000) && fault) {
+        	Entry = 1;
+        	FcActualState = FC_ALARM;
+        	ERRO_C[2] = 1;
+        }else if (!fault) {
+            last_reading = Time;
+        }
 }
+
 void Check_Alarms(void)
 {
     if (Alarm_Entry == 1) {
@@ -73,7 +79,6 @@ void Check_Alarms(void)
             	Entry = 1;
                 FcActualState = FC_ALARM;
                 ERRO_C[0] = 1;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -87,7 +92,6 @@ void Check_Alarms(void)
             	Entry = 1;
                 FcActualState = FC_ALARM;
                 ERRO_C[3] = 1;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -99,7 +103,6 @@ void Check_Alarms(void)
             	Entry = 1;
                 FcActualState = FC_ALARM;
                 ERRO_C[1] = 1;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -111,7 +114,6 @@ void Check_Alarms(void)
             	Entry = 1;
                 FcActualState = FC_ALARM;
                 ERRO_C[2] = 1;
-                HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
             }
             break;
 
@@ -121,28 +123,8 @@ void Check_Alarms(void)
     }
 }
 
-void print_sensors(int print_sensor, int print_state)
-{
-    inteiro = (int)Pressure;
-    decimal = (int)((Pressure - inteiro) * 100);
-
-    H2_reaction_tracker();
-
-    if (cont_print >= 10) {
-        if (print_sensor) {
-            print("Temp: %dC; ",          (int)Temp);
-            print("Current: %dA; ",       (int)Current);
-            print("Voltage: %dV; ",       (int)Voltage);
-            print("Pressure: %d.%02d; ",  inteiro, decimal);
-            print("FAN: %d%%; ",          Fan_power);
-            print("H2: %dg; ",            (int)H2_consumed);
-            print("A*s: %d; ",            (int)amp_segundo);
-            print("Purgas: %d; ",         purgas);
-            println("Estado: %d",         (int)FcActualState);
-        }
-        cont_print = 0;
-    }
-
-    Check_Alarms();
-    cont_print++;
+void SEND_CAN_Message(void) {
+  Slice_DATA();
+  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &CHECK, DATA);
+  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
 }

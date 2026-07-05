@@ -2,4 +2,3 @@
 ../Core/Src/COMUNICATION_PROTOCALS/can.c:35:6:declare_can_CHECK	1
 ../Core/Src/COMUNICATION_PROTOCALS/can.c:48:6:declare_can_ERROR	1
 ../Core/Src/COMUNICATION_PROTOCALS/can.c:60:6:Slice_DATA	1
-../Core/Src/COMUNICATION_PROTOCALS/can.c:78:6:SEND_CAN_Message	1

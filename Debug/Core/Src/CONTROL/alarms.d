@@ -1,5 +1,5 @@
-Core/Src/CONTROL/state.o: ../Core/Src/CONTROL/state.c \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/state.h \
+Core/Src/CONTROL/alarms.o: ../Core/Src/CONTROL/alarms.c \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h ../Core/Inc/main.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h \
  ../Core/Inc/stm32h5xx_hal_conf.h \
@@ -34,13 +34,12 @@ Core/Src/CONTROL/state.o: ../Core/Src/CONTROL/state.c \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/contactor.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/state.h:
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h:
@@ -76,9 +75,8 @@ Core/Src/CONTROL/state.o: ../Core/Src/CONTROL/state.c \
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CMD/contactor.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h:

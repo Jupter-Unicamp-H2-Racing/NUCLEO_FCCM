@@ -3,7 +3,10 @@
 #include "valve.h"
 #include "auto_control.h"
 #include "uart.h"
+#include "alarms.h"
 
+
+extern Fc_State FcActualState;
 extern int Entry;
 
 // Variáveis para controle de delay interno dos estados
@@ -12,6 +15,40 @@ int second_delay_auth = 0;
 uint32_t first_delay_start = 0;
 uint32_t second_delay_start = 0;
 uint32_t startuppurge_start_time;
+
+void Run_State_Machine(){
+    switch (FcActualState)
+  	      {
+  	        case FC_STANDBY:
+  	            FC_StandBy_State();
+  	            break;
+  	        case FC_STARTUP_FANSPOOLUP:
+  	            FC_StartUp_FanSpoolUp_State();
+  	            break;
+  	        case FC_STARTUP_STARTUPPURGE:
+  	            FC_StartUp_StartUpPurge_State();
+  	            break;
+  	        case FC_STARTUP_END:
+  	            FC_StartUp_End_State();
+  	            break;
+  	        case FC_WARMUP:
+  	            FC_WarmUp();
+  	            break;
+  	        case FC_RUN:
+  	            FC_Run_State();
+  	            break;
+  	        case FC_SHUTDOWN:
+  	            FC_Shutdown_State();
+  	            break;
+  	        case FC_ALARM:
+  	            FC_Alarm_State();
+  	            break;
+  	        default:
+  	            FcActualState = FC_STANDBY;
+  	            Entry = 1;
+  	            break;
+  	      }
+}
 
 void FC_StandBy_State(){
     if(Entry == 1){
@@ -93,12 +130,16 @@ void FC_StartUp_End_State(){
 }
 
 void FC_Run_State(){
+	Automatic_Fan_Control();
+	CheckVoltageNominal();
     if(Entry == 1){
         Automatic_Fan_Control();
         Automatic_Purge_Control();
         SupplyValve_CMD(OPEN);
         MainContactor_CMD(CLOSED);
         ResistorContactor_CMD(OPEN);
+        FanLastCallTime = Time;
+                PurgeLastCallTime = Time;
         Entry = 0;
     }else {
         Automatic_Fan_Control();
@@ -135,49 +176,4 @@ void FC_Alarm_State(){
         Entry = 0;
     }
     // Loop infinito ou aguarda reset manual
-}
-
-int round_p(float value){
-    int under = (int) value;
-    int upper = under+1;
-    float r_under = value - under;
-    float r_upper = upper - value;
-
-    if(r_under < r_upper){
-        return (int) value;
-    } else{
-        return (int) value + 1;
-    }
-}
-
-int StartECU(){
-    if (HAL_GPIO_ReadPin(ECM_GPIO_Port, ECM_Pin) == GPIO_PIN_RESET) {
-    	return 1;
-    }
-    return 0;
-}
-
-void ForceSupply(){
-    if (HAL_GPIO_ReadPin(FORCE_SUPPLY_GPIO_Port, FORCE_SUPPLY_Pin) == GPIO_PIN_SET) {
-    	SupplyValve_CMD(OPEN);
-    	HAL_Delay(500);
-    	println("supply");
-    	SupplyValve_CMD(CLOSED);
-    }
-}
-
-void ForcePurge(){
-    if (HAL_GPIO_ReadPin(FORCE_PURGE_GPIO_Port, FORCE_PURGE_Pin) == GPIO_PIN_SET) {
-    	PurgeValve_CMD(OPEN);
-    	HAL_Delay(500);
-    	println("purga");
-    	PurgeValve_CMD(CLOSED);
-    }
-}
-
-void Air_Starve(){
-    Fan_CMD(0);
-    SupplyValve_CMD(OPEN);
-    PurgeValve_CMD(CLOSED);
-    HAL_Delay(10000);
 }

@@ -1,12 +1,16 @@
 #include "main.h"
+#include "main.h"
 #include "context.h"
 #include "state.h"
 #include "uart.h"
 #include "valve.h"
 #include "contactor.h"
 #include "can.h"
-#include "transmit.h"
-// --- Leitura de sensores ---
+#include "print.h"
+#include "button.h"
+#include "alarms.h"
+#include "auto_control.h"
+
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 DMA_NodeTypeDef Node_GPDMA1_Channel0;
@@ -15,9 +19,10 @@ DMA_HandleTypeDef handle_GPDMA1_Channel0;
 DMA_NodeTypeDef Node_GPDMA2_Channel0;
 DMA_QListTypeDef List_GPDMA2_Channel0;
 DMA_HandleTypeDef handle_GPDMA2_Channel0;
-uint16_t ADC_VC[40] = {0};
-uint16_t ADC_TP[40] = {0};
-// --- Barramento CAN ---
+
+uint16_t ADC_VC[80] = {0};
+uint16_t ADC_TP[80] = {0};
+
 FDCAN_HandleTypeDef hfdcan2;
 FDCAN_TxHeaderTypeDef CHECK;
 FDCAN_TxHeaderTypeDef ERROR_CAN;
@@ -25,23 +30,26 @@ FDCAN_FilterTypeDef sFilterConfig;
 uint32_t MAILBOX;
 uint8_t DATA[8] = {0};
 uint8_t ERRO_C[8] = {0};
-// --- Protocolo UART ---
-UART_HandleTypeDef huart2;
-// --- Variáveis de controle ---
+
+FDCAN_HandleTypeDef hfdcan2;
+
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim12;
 Valve_Status PurgeValveStatus = CLOSED;
 Valve_Status SupplyValveStatus = CLOSED;
 Valve_Status ResistorContactorStatus = OPEN;
 Valve_Status MainContactorStatus = OPEN;
 float PreviousFanCmd = 0;
-// --- Consumo de H2 ---
+
 uint32_t last_H2_calc = 0;
 float H2_consumed = 0;
 float H2_reacted = 0;
 float delta_t = 0;
 float amp_segundo = 0;
 int purgas = 1;
-// --- Variáveis de tempo ---
+
 uint32_t Time = 0;
 uint32_t fanspoolup_start_time = 0;
 uint32_t warmup_start_time = 0;
@@ -51,17 +59,27 @@ uint32_t PurgeStartTime = 0;
 uint32_t FanLastCallTime = 0;
 float LastITerm = 0;
 int LastTempDiff = 0;
-// --- Variáveis Globais ---
-Fc_State FcActualState = FC_STANDBY;
+uint8_t ForceSupplyActive = 0;
+uint8_t ForcePurgeActive = 0;
+uint32_t ForceSupplyOpenTime = 0;
+uint32_t ForcePurgeOpenTime = 0;
 
+Fc_State FcActualState = FC_STANDBY;
 float Voltage = 0;
 float Pressure = 0;
 int Temp = 0;
 int Current = 0;
-
 int Fan_power = 0;
 int Entry = 1;
 int Start = 0;
+int flag_1ms = 0;
+int flag_20ms = 0;
+int flag_100ms = 0;
+int Delay_S = 0;
+int Delay_P = 0;
+
+UART_HandleTypeDef huart2;
+
 void SystemClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
@@ -69,141 +87,214 @@ static void MX_GPDMA1_Init(void);
 static void MX_GPDMA2_Init(void);
 static void MX_ICACHE_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_FDCAN2_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
-
+static void MX_FDCAN2_Init(void);
+static void MX_TIM3_Init(void);
+static void MX_TIM4_Init(void);
+static void MX_TIM12_Init(void);
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc);
-
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc);
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin);
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin);
 
 int main(void)
 {
-MPU_Config();
-HAL_Init();
-SystemClock_Config();
-MX_GPIO_Init();
-MX_GPDMA1_Init();
-MX_GPDMA2_Init();
-MX_ICACHE_Init();
-MX_ADC1_Init();
-MX_FDCAN2_Init();
-MX_ADC2_Init();
-MX_USART2_UART_Init();
-MX_TIM1_Init();
-HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-// --- inicialização dos sensores ---
-HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&ADC_VC, 40);
-HAL_ADC_Start_DMA(&hadc2, (uint32_t*)&ADC_TP, 40);
-// --- inicialização de CAN ---
-declare_can_CHECK();
-declare_can_ERROR();
-config();
-HAL_FDCAN_Start(&hfdcan2);
-println("inicializado com sucesso");
-while (1)
-{
-  Time = HAL_GetTick();
-  SEND_CAN_Message();
-  print_sensors(1, 1);
-  ForcePurge();
-  ForceSupply();
-  if (StartECU() && Start && FcActualState != FC_ALARM) {
-    FcActualState = FC_SHUTDOWN;
-    FC_Shutdown_State();
-    Start = 0;
+  MPU_Config();
+
+  HAL_Init();
+
+  SystemClock_Config();
+
+  MX_GPIO_Init();
+  MX_GPDMA1_Init();
+  MX_GPDMA2_Init();
+  MX_ICACHE_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
+  MX_USART2_UART_Init();
+  MX_TIM1_Init();
+  MX_FDCAN2_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
+  MX_TIM12_Init();
+
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_Base_Start_IT(&htim3);   // gera flag_1ms
+    HAL_TIM_Base_Start_IT(&htim4);   // gera flag_20ms
+    HAL_TIM_Base_Start_IT(&htim12);  // gera flag_100ms
+  // --- inicialização dos sensores ---
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&ADC_VC, 80);
+  HAL_ADC_Start_DMA(&hadc2, (uint32_t*)&ADC_TP, 80);
+  // --- inicialização de CAN ---
+  declare_can_CHECK();
+  declare_can_ERROR();
+  config();
+  HAL_FDCAN_Start(&hfdcan2);
+  println("inicializado com sucesso");
+  while (1)
+  {
+	  if (flag_1ms)
+	  {
+	      Run_State_Machine();
+	      Check_Alarms();
+	      Time = HAL_GetTick();
+	      flag_1ms = 0;
+	  }
+	  if (flag_20ms)
+	  {
+	      Automatic_Purge_Control();
+	      ForcePurge();
+	      ForceSupply();
+	      flag_20ms = 0;
+	  }
+	  if (flag_100ms)
+	  {
+	      SEND_CAN_Message();
+	      print_sensors(1, 1);
+	      flag_100ms = 0;
+	  }
+	  __WFI();
   }
-  else{
-	switch (FcActualState)
-	      {
-	        case FC_STANDBY:
-	            FC_StandBy_State();
-	            break;
-	        case FC_STARTUP_FANSPOOLUP:
-	            FC_StartUp_FanSpoolUp_State();
-	            break;
-	        case FC_STARTUP_STARTUPPURGE:
-	            FC_StartUp_StartUpPurge_State();
-	            break;
-	        case FC_STARTUP_END:
-	            FC_StartUp_End_State();
-	            break;
-	        case FC_WARMUP:
-	            FC_WarmUp();
-	            break;
-	        case FC_RUN:
-	            FC_Run_State();
-	            break;
-	        case FC_SHUTDOWN:
-	            FC_Shutdown_State();
-	            break;
-	        case FC_ALARM:
-	            FC_Alarm_State();
-	            break;
-	        default:
-	            FcActualState = FC_STANDBY;
-	            Entry = 1;
-	            break;
-	      }
   }
-}
-}
+  void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
+  {
+     if (hadc->Instance == ADC1)
+     {
+         float voltage_acc = 0;
+         float current_acc = 0;
+         for (int i = 0; i < 20; i++) {
+             voltage_acc += ADC_VC[2*i];
+             current_acc += ADC_VC[2*i + 1];
+         }
+         //Voltage = voltage_acc / 20.0f;
+         //Current = (int)(current_acc / 20.0f);
+         voltage_acc /= 20.0f;
+         voltage_acc /= 4095.0f;
+         voltage_acc *= 100.0f;
+         current_acc /= 20.0f;
+         current_acc /= 4095.0f;
+         current_acc *= 100.0f;
+         Voltage = voltage_acc; //teste com valor constante
+         Current = current_acc;
+     }
+     if (hadc->Instance == ADC2)
+     {
+         float pressure_acc = 0;
+         float temp_acc = 0;
+         for (int i = 0; i < 20; i++) {
+             pressure_acc += ADC_TP[2*i];
+             temp_acc += ADC_TP[2*i + 1];
+         }
+         pressure_acc /= 20.0f;
+         pressure_acc /= 4095.0f;
+         Pressure = pressure_acc;
+         //Temp = (int)(temp_acc / 20.0f);
+         temp_acc /= 20.0f;
+         temp_acc /= 4095.0f;
+         temp_acc *= 100.0f;
+         Temp = temp_acc;
+     }
+  }
 
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
+  void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+  {
+       if (hadc->Instance == ADC1)
+       {
+           float voltage_acc = 0;
+           float current_acc = 0;
+           for (int i = 20; i < 40; i++) {
+               voltage_acc += ADC_VC[2*i];
+               current_acc += ADC_VC[2*i + 1];
+           }
+           //Voltage = voltage_acc / 20.0f;
+           //Current = (int)(current_acc / 20.0f);
+           voltage_acc /= 20.0f;
+           voltage_acc /= 4095.0f;
+           voltage_acc *= 100.0f;
+           current_acc /= 20.0f;
+           current_acc /= 4095.0f;
+           current_acc *= 100.0f;
+           Voltage = voltage_acc; //teste com valor constante
+           Current = current_acc;
+       }
+       if (hadc->Instance == ADC2)
+       {
+           float pressure_acc = 0;
+           float temp_acc = 0;
+           for (int i = 20; i < 40; i++) {
+               pressure_acc += ADC_TP[2*i];
+               temp_acc += ADC_TP[2*i + 1];
+           }
+           pressure_acc /= 20.0f;
+           pressure_acc /= 4095.0f;
+           Pressure = pressure_acc;
+           //Temp = (int)(temp_acc / 20.0f);
+           temp_acc /= 20.0f;
+           temp_acc /= 4095.0f;
+           temp_acc *= 100.0f;
+           Temp = temp_acc;
+       }
+    }
+  void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
+  {
+      if (GPIO_Pin == ECM_Pin)
+      {
+          if (!Start && FcActualState != FC_ALARM) {
+              FcActualState = FC_STARTUP_FANSPOOLUP;
+              Start = 1;
+              Entry = 1;
+          }
+      }
+      if (GPIO_Pin == FORCE_PURGE_Pin && (2000 <= Time - Delay_P || Delay_P == 0))
+      {
+          if (!ForcePurgeActive) {          // <-- ignora retriggers enquanto já está ativo
+              PurgeValve_CMD(OPEN);
+              ForcePurgeActive = 1;
+              ForcePurgeOpenTime = Time;
+              Delay_P = Time;
+          }
+          println("ok");
+      }
+      if (GPIO_Pin == FORCE_SUPPLY_Pin && (2000 <= Time - Delay_S || Delay_P == 0))
+      {
+          if (!ForceSupplyActive) {         // <-- mesma correção pro supply
+              SupplyValve_CMD(OPEN);
+              ForceSupplyActive = 1;
+              ForceSupplyOpenTime = Time;
+              Delay_S = Time;
+          }
+      }
+  }
+
+  void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+  {
+      if (GPIO_Pin == ECM_Pin)
+      {
+      if (StartECU() && Start && FcActualState != FC_ALARM) {
+    	  FcActualState = FC_SHUTDOWN;
+    	  Start = 0;
+      }
+    }
+  }
+
+  void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    if (hadc->Instance == ADC1)
+    if (htim->Instance == TIM3)
     {
-        float voltage_acc = 0;
-        float current_acc = 0;
-
-        for (int i = 0; i < 20; i++) {
-            voltage_acc += ADC_VC[2*i];
-            current_acc += ADC_VC[2*i + 1];
-        }
-
-        //Voltage = voltage_acc / 20.0f;
-        //Current = (int)(current_acc / 20.0f);
-        voltage_acc /= 20.0f;
-        voltage_acc /= 4095.0f;
-        voltage_acc *= 100.0f;
-        current_acc /= 20.0f;
-        current_acc /= 4095.0f;
-        current_acc *= 100.0f;
-        Voltage = voltage_acc; //teste com valor constante
-        Current = current_acc;
+        flag_1ms = 1;
     }
-
-    if (hadc->Instance == ADC2)
+    if (htim->Instance == TIM4)
     {
-        float pressure_acc = 0;
-        float temp_acc = 0;
-
-        for (int i = 0; i < 20; i++) {
-            pressure_acc += ADC_TP[2*i];
-            temp_acc += ADC_TP[2*i + 1];
-        }
-
-        pressure_acc /= 20.0f;
-        pressure_acc /= 4095.0f;
-        Pressure = pressure_acc;
-        //Temp = (int)(temp_acc / 20.0f);
-
-        temp_acc /= 20.0f;
-        temp_acc /= 4095.0f;
-        temp_acc *= 100.0f;
-        Temp = temp_acc;
+        flag_20ms = 1;
+    }
+    if (htim->Instance == TIM12)
+    {
+        flag_100ms = 1;
     }
 }
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
-{
-    if (!Start && FcActualState != FC_ALARM) {
-	FcActualState = FC_STARTUP_FANSPOOLUP;
-	println("ligou");
-	Start = 1;
-	Entry = 1;
-    }
-}
+
 
 /**
   * @brief System Clock Configuration
@@ -551,7 +642,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 0;
+  htim1.Init.Prescaler = 320;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 100;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -600,6 +691,134 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
+
+}
+
+/**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 8399;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 1;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+
+}
+
+/**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 8399;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 19;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
+  * @brief TIM12 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM12_Init(void)
+{
+
+  /* USER CODE BEGIN TIM12_Init 0 */
+
+  /* USER CODE END TIM12_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+
+  /* USER CODE BEGIN TIM12_Init 1 */
+
+  /* USER CODE END TIM12_Init 1 */
+  htim12.Instance = TIM12;
+  htim12.Init.Prescaler = 0;
+  htim12.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim12.Init.Period = 3999;
+  htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim12) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim12, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM12_Init 2 */
+
+  /* USER CODE END TIM12_Init 2 */
 
 }
 
@@ -677,7 +896,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : ECM_Pin */
   GPIO_InitStruct.Pin = ECM_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(ECM_GPIO_Port, &GPIO_InitStruct);
 
@@ -697,13 +916,19 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : FORCE_SUPPLY_Pin FORCE_PURGE_Pin */
   GPIO_InitStruct.Pin = FORCE_SUPPLY_Pin|FORCE_PURGE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI10_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

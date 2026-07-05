@@ -61,6 +61,9 @@ extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
 extern DMA_NodeTypeDef Node_GPDMA2_Channel0;
 extern DMA_QListTypeDef List_GPDMA2_Channel0;
 extern DMA_HandleTypeDef handle_GPDMA2_Channel0;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim12;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -218,6 +221,34 @@ void EXTI0_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles EXTI Line9 interrupt.
+  */
+void EXTI9_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_IRQn 0 */
+
+  /* USER CODE END EXTI9_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(FORCE_SUPPLY_Pin);
+  /* USER CODE BEGIN EXTI9_IRQn 1 */
+
+  /* USER CODE END EXTI9_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI Line10 interrupt.
+  */
+void EXTI10_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI10_IRQn 0 */
+
+  /* USER CODE END EXTI10_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(FORCE_PURGE_Pin);
+  /* USER CODE BEGIN EXTI10_IRQn 1 */
+
+  /* USER CODE END EXTI10_IRQn 1 */
+}
+
+/**
   * @brief This function handles GPDMA1 Channel 0 global interrupt.
   */
 void GPDMA1_Channel0_IRQHandler(void)
@@ -232,6 +263,34 @@ void GPDMA1_Channel0_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM3 global interrupt.
+  */
+void TIM3_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM3_IRQn 0 */
+
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim3);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
+
+  /* USER CODE END TIM3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM4 global interrupt.
+  */
+void TIM4_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM4_IRQn 0 */
+
+  /* USER CODE END TIM4_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim4);
+  /* USER CODE BEGIN TIM4_IRQn 1 */
+
+  /* USER CODE END TIM4_IRQn 1 */
+}
+
+/**
   * @brief This function handles GPDMA2 Channel 0 global interrupt.
   */
 void GPDMA2_Channel0_IRQHandler(void)
@@ -243,6 +302,20 @@ void GPDMA2_Channel0_IRQHandler(void)
   /* USER CODE BEGIN GPDMA2_Channel0_IRQn 1 */
 
   /* USER CODE END GPDMA2_Channel0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM12 global interrupt.
+  */
+void TIM12_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM12_IRQn 0 */
+
+  /* USER CODE END TIM12_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim12);
+  /* USER CODE BEGIN TIM12_IRQn 1 */
+
+  /* USER CODE END TIM12_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

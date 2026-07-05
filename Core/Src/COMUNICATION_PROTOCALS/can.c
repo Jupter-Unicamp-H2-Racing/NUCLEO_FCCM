@@ -65,17 +65,12 @@ void Slice_DATA(void){
 	uint8_t H2 = (uint8_t)(H2_consumed);
 
 
-    DATA[0] = (uint8_t)((Fccurrent >> 8) & 0xFF);
-    DATA[1] = (uint8_t)((Fccurrent) & 0xFF);
-    DATA[2] = (uint8_t)((Fctemp >> 8)& 0xFF);
-    DATA[3] = (uint8_t)((Fctemp) & 0xFF);
-    DATA[4] = (uint8_t)((Fcvoltage >> 8) & 0xFF);
-    DATA[5] = (uint8_t)((Fcvoltage) & 0xFF);
+    DATA[1] = (uint8_t)((Fccurrent >> 8) & 0xFF);
+    DATA[0] = (uint8_t)((Fccurrent) & 0xFF);
+    DATA[3] = (uint8_t)((Fctemp >> 8)& 0xFF);
+    DATA[2] = (uint8_t)((Fctemp) & 0xFF);
+    DATA[5] = (uint8_t)((Fcvoltage >> 8) & 0xFF);
+    DATA[4] = (uint8_t)((Fcvoltage) & 0xFF);
     DATA[6] = (uint8_t)((Fcpressure) & 0xFF);
     DATA[7] = (uint8_t)((H2) & 0xFF);
-}
-
-void SEND_CAN_Message(void) {
-  Slice_DATA();
-  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &CHECK, DATA);
 }

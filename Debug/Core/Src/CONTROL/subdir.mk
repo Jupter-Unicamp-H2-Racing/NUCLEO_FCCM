@@ -5,19 +5,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/CONTROL/alarms.c \
 ../Core/Src/CONTROL/auto_control.c \
-../Core/Src/CONTROL/state.c \
-../Core/Src/CONTROL/transmit.c 
+../Core/Src/CONTROL/button.c \
+../Core/Src/CONTROL/print.c \
+../Core/Src/CONTROL/state.c 
 
 OBJS += \
+./Core/Src/CONTROL/alarms.o \
 ./Core/Src/CONTROL/auto_control.o \
-./Core/Src/CONTROL/state.o \
-./Core/Src/CONTROL/transmit.o 
+./Core/Src/CONTROL/button.o \
+./Core/Src/CONTROL/print.o \
+./Core/Src/CONTROL/state.o 
 
 C_DEPS += \
+./Core/Src/CONTROL/alarms.d \
 ./Core/Src/CONTROL/auto_control.d \
-./Core/Src/CONTROL/state.d \
-./Core/Src/CONTROL/transmit.d 
+./Core/Src/CONTROL/button.d \
+./Core/Src/CONTROL/print.d \
+./Core/Src/CONTROL/state.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,7 +33,7 @@ Core/Src/CONTROL/%.o Core/Src/CONTROL/%.su Core/Src/CONTROL/%.cyclo: ../Core/Src
 clean: clean-Core-2f-Src-2f-CONTROL
 
 clean-Core-2f-Src-2f-CONTROL:
-	-$(RM) ./Core/Src/CONTROL/auto_control.cyclo ./Core/Src/CONTROL/auto_control.d ./Core/Src/CONTROL/auto_control.o ./Core/Src/CONTROL/auto_control.su ./Core/Src/CONTROL/state.cyclo ./Core/Src/CONTROL/state.d ./Core/Src/CONTROL/state.o ./Core/Src/CONTROL/state.su ./Core/Src/CONTROL/transmit.cyclo ./Core/Src/CONTROL/transmit.d ./Core/Src/CONTROL/transmit.o ./Core/Src/CONTROL/transmit.su
+	-$(RM) ./Core/Src/CONTROL/alarms.cyclo ./Core/Src/CONTROL/alarms.d ./Core/Src/CONTROL/alarms.o ./Core/Src/CONTROL/alarms.su ./Core/Src/CONTROL/auto_control.cyclo ./Core/Src/CONTROL/auto_control.d ./Core/Src/CONTROL/auto_control.o ./Core/Src/CONTROL/auto_control.su ./Core/Src/CONTROL/button.cyclo ./Core/Src/CONTROL/button.d ./Core/Src/CONTROL/button.o ./Core/Src/CONTROL/button.su ./Core/Src/CONTROL/print.cyclo ./Core/Src/CONTROL/print.d ./Core/Src/CONTROL/print.o ./Core/Src/CONTROL/print.su ./Core/Src/CONTROL/state.cyclo ./Core/Src/CONTROL/state.d ./Core/Src/CONTROL/state.o ./Core/Src/CONTROL/state.su
 
 .PHONY: clean-Core-2f-Src-2f-CONTROL
 

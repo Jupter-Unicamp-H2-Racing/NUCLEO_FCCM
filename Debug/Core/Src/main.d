@@ -39,7 +39,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/contactor.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/transmit.h
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/print.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/button.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h
 ../Core/Inc/main.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h:
 ../Core/Inc/stm32h5xx_hal_conf.h:
@@ -81,4 +84,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/contactor.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/transmit.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/print.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/button.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:

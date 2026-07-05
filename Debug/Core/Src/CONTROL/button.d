@@ -1,4 +1,4 @@
-Core/Src/CONTROL/state.o: ../Core/Src/CONTROL/state.c \
+Core/Src/CONTROL/button.o: ../Core/Src/CONTROL/button.c \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/state.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h ../Core/Inc/main.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h \
@@ -39,7 +39,7 @@ Core/Src/CONTROL/state.o: ../Core/Src/CONTROL/state.c \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/button.h
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/state.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
 ../Core/Inc/main.h:
@@ -81,4 +81,4 @@ Core/Src/CONTROL/state.o: ../Core/Src/CONTROL/state.c \
 /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/alarms.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/button.h:

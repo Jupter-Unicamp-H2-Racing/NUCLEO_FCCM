@@ -1,10 +1,11 @@
 #include "auto_control.h"
 #include "state.h"
-#include "valve.h" // Para usar Fan_CMD e PurgeValve_CMD
+#include "valve.h"
 
 float Topt;// Variável global interna deste arquivo (ou mova para context se precisar ver fora)
 int PurgeValveCmd = CLOSED;
 int PurgeActive = 0;
+extern uint8_t ForcePurgeActive;
 
 float Calculate_OptTemp(){
     // Nota: FcCurrent vem do fuel_cell_context.h
@@ -68,29 +69,30 @@ void Automatic_Fan_Control(){
 }
 
 void Automatic_Purge_Control() {
-    // --- Integração de Ampères-Segundo ---
+    if (ForcePurgeActive) {
+        return;   // Force tem prioridade; ele mesmo fecha a válvula quando o tempo vencer
+    }
+
     if (PurgeValveStatus == CLOSED && Current > 0) {
         float dt_s = ((float)(Time - PurgeLastCallTime)) / 1000.0f;
         amp_segundo += Current * dt_s;
     }
+
     PurgeLastCallTime = Time;
 
-    // --- Disparo da Purga ---
-    if (amp_segundo >= PURGE_INTERVAL && !PurgeActive) {
-        amp_segundo = 0.0f;
-        PurgeStartTime = Time;
-        PurgeActive = 1;
-    }
-
-    // --- Duração da Purga ---
-    if (PurgeActive) {
-        if ((Time - PurgeStartTime) < PURGE_DURATION) {
+    if (!PurgeActive) {
+        if (amp_segundo >= PURGE_INTERVAL) {
+            amp_segundo = 0.0f;
+            PurgeStartTime = Time;
+            PurgeActive = 1;
             PurgeValve_CMD(OPEN);
-            HAL_Delay(PURGE_DURATION);
+        } else {
+            PurgeValve_CMD(CLOSED);
+        }
+    } else {
+        if (Time - PurgeStartTime >= PURGE_DURATION) {
             PurgeValve_CMD(CLOSED);
             PurgeActive = 0;
         }
-    } else {
-        PurgeValve_CMD(CLOSED);
     }
 }

@@ -2,6 +2,24 @@
 #include "main.h" // Necessário para HAL_GPIO e TIM1
 
 extern int purgas;
+extern float Pressure;
+extern float Voltage;
+extern int Temp;
+extern int Current;
+extern int Entry;
+extern uint32_t Time;
+
+void H2_reaction_tracker(void)
+{
+
+    H2_reacted = H2_REACTION_PER_SEC_A * Current * PurgeLastCallTime;
+
+    if (H2_consumed + H2_reacted >= H2_TOTAL_MASS) {
+        H2_consumed = H2_TOTAL_MASS;
+    } else {
+        H2_consumed += H2_reacted;
+    }
+}
 
 void H2_purge_tracker(){
   if (H2_consumed + H2_PURGE_CONSUMPTION >= H2_TOTAL_MASS) {
