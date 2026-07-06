@@ -1,8 +1,8 @@
 # NUCLEO_FCCM
 | Categoria       | Sinal/Função | GPIO | Conector |
 | --------------- | ------------ | ---- | -------- |
-| CAN             | FDCAN1_RX    | PA11 | CN10-14  |
-| CAN             | FDCAN1_TX    | PA12 | CN10-12  |
+| CAN             | FDCAN1_RX    | PA11 | CN10-29  |
+| CAN             | FDCAN1_TX    | PA12 | CN10-31  |
 | Alimentação     | 3.3V         | —    | CN7-16   |
 | Alimentação     | 5V           | —    | CN7-18   |
 | Terra           | GND          | —    | CN7-8    |
