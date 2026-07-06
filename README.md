@@ -12,7 +12,7 @@
 | Terra           | GND          | —    | CN10-9   |
 | Terra           | GND          | —    | CN10-20  |
 | Terra Analógico | AGND         | —    | CN10-32  |
-| Saída   | ECM          | PC0  | CN7-38   |
+| Saída   | ECU          | PC0  | CN7-38   |
 | Saída   | Warm Up     | PC2  | CN7-35   |
 | Entrada   | TEMPERATURE  | PC3  | CN7-37   |
 | Entrada   | VOLTAGE      | PA0  | CN7-28   |
