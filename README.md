@@ -1,9 +1,12 @@
-# NUCLEO_FCCM
 | Categoria       | Sinal/Função | GPIO | Conector |
 | --------------- | ------------ | ---- | -------- |
-| CAN             | FDCAN1_RX    | PA11 | CN10-29  |
-| CAN             | FDCAN1_TX    | PA12 | CN10-31  |
+| CAN             | FDCAN1_RX    | PB5  | CN10-29  |
+| CAN             | FDCAN1_TX    | PB3  | CN10-31  |
+| UART            | USART1_TX    | PB14 | CN10-28  |
+| UART            | USART1_RX    | PB15 | CN10-26  |
 | Alimentação     | 3.3V         | —    | CN7-16   |
+| Alimentação     | 3.3V         | —    | CN7-25   |
+| Alimentação     | 3.3V         | —    | CN10-4   |
 | Alimentação     | 5V           | —    | CN7-18   |
 | Terra           | GND          | —    | CN7-8    |
 | Terra           | GND          | —    | CN7-19   |
@@ -12,18 +15,19 @@
 | Terra           | GND          | —    | CN10-9   |
 | Terra           | GND          | —    | CN10-20  |
 | Terra Analógico | AGND         | —    | CN10-32  |
-| Saída   | ECU          | PC0  | CN7-38   |
-| Saída   | Warm Up     | PC2  | CN7-35   |
-| Entrada   | TEMPERATURE  | PC3  | CN7-37   |
-| Entrada   | VOLTAGE      | PA0  | CN7-28   |
-| Entrada   | CURRENT      | PA7  | CN10-15  |
-| Entrada   | PRESSURE     | PB0  | CN7-34   |
+| Saída           | ECU          | PC0  | CN7-38   |
+| Saída           | Warm Up      | PC2  | CN7-35   |
+| Entrada         | TEMPERATURE  | PC3  | CN7-37   |
+| Entrada         | VOLTAGE      | PA0  | CN7-28   |
+| Entrada         | CURRENT      | PA7  | CN10-15  |
+| Entrada         | PRESSURE     | PB0  | CN7-34   |
 | Saída           | MAIN         | PB12 | CN10-16  |
 | Saída           | PURGE        | PB13 | CN10-30  |
 | PWM             | PWM_FAN      | PA8  | CN10-23  |
-| Saída         | FORCE_SUPPLY | PA9  | CN10-2   |
-| Saída         | FORCE_PURGE  | PA10 | CN10-4   |
-| Saída   | SUPPLY       | PC11 | CN7-2    |
+| Saída           | FORCE_SUPPLY | PA9  | CN10-2   |
+| Saída           | FORCE_PURGE  | PA10 | CN10-4   |
+| Saída           | SUPPLY       | PC11 | CN7-2    |
+
 
 | Timer  | Tipo                      | Uso típico                                   |
 | ------ | ------------------------- | -------------------------------------------- |
