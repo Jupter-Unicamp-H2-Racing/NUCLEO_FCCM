@@ -715,7 +715,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 8399;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 0;
+  htim3.Init.Period = 1;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -904,10 +904,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ALIMENTACAO_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ECM_Pin FORCE_PURGE_Pin FORCE_SUPPLY_Pin */
-  GPIO_InitStruct.Pin = ECM_Pin|FORCE_PURGE_Pin|FORCE_SUPPLY_Pin;
+  /*Configure GPIO pin : ECM_Pin */
+  GPIO_InitStruct.Pin = ECM_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(ECM_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : FORCE_PURGE_Pin FORCE_SUPPLY_Pin */
+  GPIO_InitStruct.Pin = FORCE_PURGE_Pin|FORCE_SUPPLY_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : RESISTOR_Pin */

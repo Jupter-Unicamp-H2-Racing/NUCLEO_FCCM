@@ -17,5 +17,5 @@
 ../Core/Src/main.c:792:13:MX_TIM12_Init	3
 ../Core/Src/main.c:830:13:MX_USART1_UART_Init	5
 ../Core/Src/main.c:878:13:MX_GPIO_Init	1
-../Core/Src/main.c:945:6:MPU_Config	1
-../Core/Src/main.c:981:6:Error_Handler	1
+../Core/Src/main.c:951:6:MPU_Config	1
+../Core/Src/main.c:987:6:Error_Handler	1
