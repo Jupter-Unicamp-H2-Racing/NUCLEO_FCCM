@@ -59,33 +59,34 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ALIMENTACAO_Pin GPIO_PIN_14
+#define ALIMENTACAO_GPIO_Port GPIOC
 #define ECM_Pin GPIO_PIN_0
 #define ECM_GPIO_Port GPIOC
-#define ECM_EXTI_IRQn EXTI0_IRQn
-#define RESISTOR_Pin GPIO_PIN_2
-#define RESISTOR_GPIO_Port GPIOC
+#define FORCE_PURGE_Pin GPIO_PIN_1
+#define FORCE_PURGE_GPIO_Port GPIOC
+#define FORCE_SUPPLY_Pin GPIO_PIN_2
+#define FORCE_SUPPLY_GPIO_Port GPIOC
 #define TEMPERATURE_Pin GPIO_PIN_3
 #define TEMPERATURE_GPIO_Port GPIOC
 #define VOLTAGE_Pin GPIO_PIN_0
 #define VOLTAGE_GPIO_Port GPIOA
-#define CURRENT_Pin GPIO_PIN_7
+#define CURRENT_Pin GPIO_PIN_1
 #define CURRENT_GPIO_Port GPIOA
+#define RESISTOR_Pin GPIO_PIN_4
+#define RESISTOR_GPIO_Port GPIOC
 #define PRESSURE_Pin GPIO_PIN_0
 #define PRESSURE_GPIO_Port GPIOB
+#define SUPPLY_Pin GPIO_PIN_10
+#define SUPPLY_GPIO_Port GPIOB
 #define MAIN_Pin GPIO_PIN_12
 #define MAIN_GPIO_Port GPIOB
 #define PURGE_Pin GPIO_PIN_13
 #define PURGE_GPIO_Port GPIOB
 #define PWM_FAN_Pin GPIO_PIN_8
 #define PWM_FAN_GPIO_Port GPIOA
-#define FORCE_SUPPLY_Pin GPIO_PIN_9
-#define FORCE_SUPPLY_GPIO_Port GPIOA
-#define FORCE_SUPPLY_EXTI_IRQn EXTI9_IRQn
-#define FORCE_PURGE_Pin GPIO_PIN_10
-#define FORCE_PURGE_GPIO_Port GPIOA
-#define FORCE_PURGE_EXTI_IRQn EXTI10_IRQn
-#define SUPPLY_Pin GPIO_PIN_11
-#define SUPPLY_GPIO_Port GPIOC
+#define DIODO_FAN_Pin GPIO_PIN_10
+#define DIODO_FAN_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
