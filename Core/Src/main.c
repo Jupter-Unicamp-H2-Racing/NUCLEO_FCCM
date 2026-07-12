@@ -901,8 +901,9 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
     /* Nível inicial dos pinos de saída */
-    HAL_GPIO_WritePin(GPIOC, AL1_Pin | RESISTOR_Pin | AL2_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC, RESISTOR_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(GPIOB, SUPPLY_Pin | MAIN_Pin | PURGE_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC, AL1_Pin | AL2_Pin, GPIO_PIN_SET);
 
     /* Pinos de saída: AL1_Pin, RESISTOR_Pin, AL2_Pin */
     GPIO_InitStruct.Pin = AL1_Pin | RESISTOR_Pin | AL2_Pin;
