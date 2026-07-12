@@ -34,9 +34,9 @@ Core/Src/CONTROL/auto_control.o: ../Core/Src/CONTROL/auto_control.c \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
  /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/state.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/auto_control.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
 ../Core/Inc/main.h:
@@ -73,6 +73,6 @@ Core/Src/CONTROL/auto_control.o: ../Core/Src/CONTROL/auto_control.c \
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/state.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CMD/valve.h:
-/home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:

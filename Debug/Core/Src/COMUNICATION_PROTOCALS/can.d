@@ -34,7 +34,8 @@ Core/Src/COMUNICATION_PROTOCALS/can.o: \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_uart_ex.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h \
  ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h \
- /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h
+ /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h \
+ /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h
 /home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/can.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal.h:
@@ -71,3 +72,4 @@ Core/Src/COMUNICATION_PROTOCALS/can.o: \
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_exti.h:
 ../Drivers/STM32H5xx_HAL_Driver/Inc/stm32h5xx_hal_fdcan.h:
 /home/yugo/NUCLEO_FCCM/Core/Inc/CONTROL/context.h:
+/home/yugo/NUCLEO_FCCM/Core/Inc/COMUNICATION_PROTOCALS/uart.h:

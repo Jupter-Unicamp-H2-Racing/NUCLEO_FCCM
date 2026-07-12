@@ -23,5 +23,6 @@ void declare_can_CHECK(void);
 void declare_can_ERROR(void);
 void Slice_DATA(void);
 void send_FCCM(void);
+void Receive_CAN_Message(void);
 
 #endif

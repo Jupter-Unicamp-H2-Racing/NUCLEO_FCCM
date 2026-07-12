@@ -1,3 +1,3 @@
-../Core/Src/CONTROL/auto_control.c:10:7:Calculate_OptTemp	1
-../Core/Src/CONTROL/auto_control.c:16:6:Automatic_Fan_Control	7
-../Core/Src/CONTROL/auto_control.c:71:6:Automatic_Purge_Control	7
+../Core/Src/CONTROL/auto_control.c:13:7:Calculate_OptTemp	1
+../Core/Src/CONTROL/auto_control.c:20:6:Automatic_Fan_Control	7
+../Core/Src/CONTROL/auto_control.c:81:6:Automatic_Purge_Control	7

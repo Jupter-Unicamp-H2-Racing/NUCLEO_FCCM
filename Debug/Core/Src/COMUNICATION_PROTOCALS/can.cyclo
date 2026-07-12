@@ -1,4 +1,4 @@
-../Core/Src/COMUNICATION_PROTOCALS/can.c:16:6:config	1
-../Core/Src/COMUNICATION_PROTOCALS/can.c:35:6:declare_can_CHECK	1
-../Core/Src/COMUNICATION_PROTOCALS/can.c:48:6:declare_can_ERROR	1
-../Core/Src/COMUNICATION_PROTOCALS/can.c:60:6:Slice_DATA	1
+../Core/Src/COMUNICATION_PROTOCALS/can.c:21:6:config	1
+../Core/Src/COMUNICATION_PROTOCALS/can.c:37:6:declare_can_CHECK	1
+../Core/Src/COMUNICATION_PROTOCALS/can.c:51:6:declare_can_ERROR	1
+../Core/Src/COMUNICATION_PROTOCALS/can.c:65:6:Slice_DATA	1

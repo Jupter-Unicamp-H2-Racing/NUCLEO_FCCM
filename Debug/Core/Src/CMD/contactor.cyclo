@@ -1,2 +1,2 @@
-../Core/Src/CMD/contactor.c:4:6:ResistorContactor_CMD	3
-../Core/Src/CMD/contactor.c:14:6:MainContactor_CMD	3
+../Core/Src/CMD/contactor.c:6:6:ResistorContactor_CMD	3
+../Core/Src/CMD/contactor.c:21:6:MainContactor_CMD	3

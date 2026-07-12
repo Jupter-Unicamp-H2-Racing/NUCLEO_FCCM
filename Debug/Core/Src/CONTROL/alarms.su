@@ -1,3 +1,3 @@
-../Core/Src/CONTROL/alarms.c:28:6:CheckVoltageNominal	8	static
-../Core/Src/CONTROL/alarms.c:44:6:Check_Alarms	4	static
-../Core/Src/CONTROL/alarms.c:126:6:SEND_CAN_Message	8	static
+../Core/Src/CONTROL/alarms.c:26:6:CheckVoltageNominal	24	static
+../Core/Src/CONTROL/alarms.c:55:6:Check_Alarms	4	static
+../Core/Src/CONTROL/alarms.c:163:6:SEND_CAN_Message	8	static
