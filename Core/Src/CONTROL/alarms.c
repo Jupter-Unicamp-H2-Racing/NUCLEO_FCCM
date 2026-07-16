@@ -25,20 +25,33 @@ int      Alarm_Entry           = 1;
 /* --- VERIFICAÇÃO DE TENSÃO NOMINAL --- */
 void CheckVoltageNominal(void)
 {
-    if (Current < 7.5)
+    float nominal_voltage;
+    float low_limit_voltage;
+
+    if (Current <= 65.0f)
     {
-        Current_To_Voltage = -1.04 * Current + 46.0;
+        // Curva nominal
+        nominal_voltage = -0.20f * Current + 45.5f;
+
+        // Limite inferior (Lo Limit)
+        low_limit_voltage = 30;
     }
     else
     {
-        Current_To_Voltage = -0.147 * Current + 39.3;
+        // Curva nominal
+        nominal_voltage = -0.12f * Current + 40.3f;
+
+        // Limite inferior
+        low_limit_voltage = -0.15f * Current + 41.25f;
     }
 
-    fault = (Voltage < (Current_To_Voltage - 10.0));
+    Current_To_Voltage = nominal_voltage;
+
+    fault = (Voltage < low_limit_voltage);
 
     if (fault)
     {
-        if (Time - last_reading > 1000)
+        if ((Time - last_reading) > 1000)
         {
             Entry = 1;
             FcActualState = FC_ALARM;
