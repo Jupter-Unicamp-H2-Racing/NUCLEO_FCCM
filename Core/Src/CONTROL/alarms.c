@@ -42,7 +42,7 @@ void CheckVoltageNominal(void)
         nominal_voltage = -0.12f * Current + 40.3f;
 
         // Limite inferior
-        low_limit_voltage = -0.15f * Current + 41.25f;
+        low_limit_voltage = -0.15f * Current + 39.75f;
     }
 
     Current_To_Voltage = nominal_voltage;
