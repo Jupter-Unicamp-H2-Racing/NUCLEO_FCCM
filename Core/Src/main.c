@@ -25,6 +25,7 @@ DMA_HandleTypeDef handle_GPDMA2_Channel0;
 FDCAN_HandleTypeDef     hfdcan2;
 FDCAN_TxHeaderTypeDef   CHECK;
 FDCAN_TxHeaderTypeDef   ERROR_CAN;
+FDCAN_TxHeaderTypeDef   BMS_CAN;
 FDCAN_FilterTypeDef     sFilterConfig;
 FDCAN_RxHeaderTypeDef   RxHeader;
 
@@ -48,6 +49,7 @@ uint32_t MAILBOX;
 uint8_t  DATA[8]    = {0};
 uint8_t  ERRO_C[8]  = {0};
 uint8_t  RxData[8] = {0};
+uint8_t BMS[8] = {0};
 
 /* --- ESTADO DO SISTEMA (válvulas, contatores, máquina de estados) --- */
 Valve_Status PurgeValveStatus       = CLOSED;
@@ -181,6 +183,7 @@ int main(void)
     config();
     declare_can_CHECK();
     declare_can_ERROR();
+    declare_can_BMS();
     HAL_FDCAN_Start(&hfdcan2);
 
     println("inicializado com sucesso");

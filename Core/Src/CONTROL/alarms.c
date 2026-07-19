@@ -13,6 +13,7 @@ extern ADC_HandleTypeDef hadc2;
 extern FDCAN_HandleTypeDef   hfdcan2;
 extern FDCAN_TxHeaderTypeDef ERROR_CAN;
 extern FDCAN_TxHeaderTypeDef CHECK;
+extern FDCAN_TxHeaderTypeDef BMS_CAN;
 
 /* --- VARIÁVEIS LOCAIS DE ALARME --- */
 Alarm_Status Alarm             = NO_ALARM;
@@ -56,6 +57,7 @@ void CheckVoltageNominal(void)
             Entry = 1;
             FcActualState = FC_ALARM;
             ERRO_C[2] = 1;
+            BMS[0] = 2;
         }
     }
     else
@@ -116,6 +118,7 @@ void Check_Alarms(void)
                     Entry = 1;
                     FcActualState = FC_ALARM;
                     ERRO_C[0] = 1;
+                    BMS[0] = 2;
                 }
                 break;
 
@@ -133,6 +136,7 @@ void Check_Alarms(void)
                     Entry = 1;
                     FcActualState = FC_ALARM;
                     ERRO_C[3] = 1;
+                    BMS[0] = 2;
                 }
                 break;
 
@@ -148,6 +152,7 @@ void Check_Alarms(void)
                     Entry = 1;
                     FcActualState = FC_ALARM;
                     ERRO_C[1] = 1;
+                    BMS[0] = 2;
                 }
                 break;
 
@@ -163,6 +168,7 @@ void Check_Alarms(void)
                     Entry = 1;
                     FcActualState = FC_ALARM;
                     ERRO_C[2] = 1;
+                    BMS[0] = 2;
                 }
                 break;
 
@@ -177,5 +183,6 @@ void SEND_CAN_Message(void)
 {
     Slice_DATA();
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &CHECK, DATA);
+    HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &BMS_CAN, BMS);
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &ERROR_CAN, ERRO_C);
 }

@@ -91,6 +91,7 @@ extern int      purgas;
 extern uint32_t MAILBOX;
 extern uint8_t  DATA[8];
 extern uint8_t  ERRO_C[8];
+extern uint8_t BMS[8];
 
 /* --- STATUS DOS ATUADORES --- */
 extern Valve_Status PurgeValveStatus;

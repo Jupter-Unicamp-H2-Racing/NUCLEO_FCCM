@@ -18,9 +18,17 @@ um header vai ser criado para o envio de informações da fccm,
 e o outro vai ser criado para apenas as mensagens de erro
 */
 
+#define BMS_ID 0x04901002
+
+/*
+ * para a comunicação da fccm, esse ID específico é criado para
+ * se comunicar com o BMS
+ */
+
 void config(void);
 void declare_can_CHECK(void);
 void declare_can_ERROR(void);
+void declare_can_BMS(void);
 void Slice_DATA(void);
 void send_FCCM(void);
 void Receive_CAN_Message(void);

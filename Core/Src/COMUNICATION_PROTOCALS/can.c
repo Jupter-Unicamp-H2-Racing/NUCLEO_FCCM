@@ -61,6 +61,19 @@ void declare_can_ERROR(void)
     ERROR_CAN.MessageMarker = 0;
 }
 
+void declare_can_BMS(void)
+{
+    ERROR_CAN.Identifier = BMS_ID;
+    ERROR_CAN.IdType = FDCAN_EXTENDED_ID;
+    ERROR_CAN.TxFrameType = FDCAN_DATA_FRAME;
+    ERROR_CAN.DataLength = FDCAN_DLC_BYTES_8;
+    ERROR_CAN.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    ERROR_CAN.BitRateSwitch = FDCAN_BRS_OFF;
+    ERROR_CAN.FDFormat = FDCAN_CLASSIC_CAN;
+    ERROR_CAN.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    ERROR_CAN.MessageMarker = 0;
+}
+
 /* --- MONTAGEM DO PAYLOAD DE TELEMETRIA (DATA[8]) --- */
 void Slice_DATA(void)
 {
