@@ -197,7 +197,6 @@ int main(void)
             Receive_CAN_Message();
             Run_State_Machine();
             Check_Alarms();
-            H2_reaction_tracker();
             flag_5ms = 0;
         }
 

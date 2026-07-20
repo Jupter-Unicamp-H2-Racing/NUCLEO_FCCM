@@ -95,6 +95,7 @@ void FC_StartUp_StartUpPurge_State(void)
 {
     if (Entry == 1)
     {
+    	H2_reaction_tracker();
         Fan_CMD(FAN_MAX_CMD);
         SupplyValve_CMD(CLOSED);
         PurgeValve_CMD(OPEN);   // conferir
@@ -108,6 +109,7 @@ void FC_StartUp_StartUpPurge_State(void)
     {
         if (Time - startuppurge_start_time >= FAN_SU_PURGE_DURATION)
         {
+        	H2_reaction_tracker();
             FcActualState = FC_WARMUP;
             Entry = 1;
         }
@@ -119,6 +121,7 @@ void FC_WarmUp(void)
 {
     if (Entry == 1)
     {
+    	H2_reaction_tracker();
         Fan_CMD(FAN_MIN_CMD);
         SupplyValve_CMD(OPEN);
         PurgeValve_CMD(CLOSED);
@@ -132,6 +135,7 @@ void FC_WarmUp(void)
     {
         if (Time - warmup_start_time >= WARMUP_DURATION)
         {
+        	H2_reaction_tracker();
             FcActualState = FC_STARTUP_END;
             Entry = 1;
         }
@@ -143,6 +147,7 @@ void FC_StartUp_End_State(void)
 {
     if (Entry == 1)
     {
+    	H2_reaction_tracker();
         Fan_CMD(FAN_MIN_CMD);
         SupplyValve_CMD(OPEN);
         PurgeValve_CMD(CLOSED);
@@ -165,6 +170,7 @@ void FC_Run_State(void)
 
     if (Entry == 1)
     {
+    	H2_reaction_tracker();
         Automatic_Fan_Control();
         Automatic_Purge_Control();
         SupplyValve_CMD(OPEN);
@@ -176,6 +182,7 @@ void FC_Run_State(void)
     }
     else
     {
+    	H2_reaction_tracker();
         Automatic_Fan_Control();
         Automatic_Purge_Control();
         ResistorContactor_CMD(OPEN);
