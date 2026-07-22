@@ -197,6 +197,7 @@ int main(void)
             Receive_CAN_Message();
             Run_State_Machine();
             Check_Alarms();
+            Run_State_Machine();
             flag_5ms = 0;
         }
 
