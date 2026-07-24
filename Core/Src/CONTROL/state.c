@@ -194,7 +194,7 @@ void FC_Shutdown_State(void)
 {
     if (Entry == 1)
     {
-        Fan_CMD(FAN_MAX_CMD);
+        Fan_CMD(0);
         SupplyValve_CMD(CLOSED);
         PurgeValve_CMD(CLOSED);
         MainContactor_CMD(OPEN);

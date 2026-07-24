@@ -58,6 +58,7 @@ void CheckVoltageNominal(void)
             FcActualState = FC_ALARM;
             ERRO_C[2] = 1;
             BMS[0] = 2;
+            SEND_CAN_Message();
         }
     }
     else
@@ -119,6 +120,7 @@ void Check_Alarms(void)
                     FcActualState = FC_ALARM;
                     ERRO_C[0] = 1;
                     BMS[0] = 2;
+                    SEND_CAN_Message();
                 }
                 break;
 
@@ -137,6 +139,7 @@ void Check_Alarms(void)
                     FcActualState = FC_ALARM;
                     ERRO_C[3] = 1;
                     BMS[0] = 2;
+                    SEND_CAN_Message();
                 }
                 break;
 
@@ -153,6 +156,7 @@ void Check_Alarms(void)
                     FcActualState = FC_ALARM;
                     ERRO_C[1] = 1;
                     BMS[0] = 2;
+                    SEND_CAN_Message();
                 }
                 break;
 
@@ -169,6 +173,7 @@ void Check_Alarms(void)
                     FcActualState = FC_ALARM;
                     ERRO_C[2] = 1;
                     BMS[0] = 2;
+                    SEND_CAN_Message();
                 }
                 break;
 
